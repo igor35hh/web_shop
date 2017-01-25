@@ -41,13 +41,32 @@
 					</tr>
 				{% endwith %}
 			{% endfor %}
+			{% if cart.cupon %}
+				<tr class="subtotal">
+					<td colspan="4"></td>
+					<td>{{ cart.get_total_price }}</td>
+				</tr>
+				<tr>
+					<td>
+						"{{ cart.cupon.code }}" cupon on ({{ cart.cupon.discount }} % less)
+					</td>
+					<td colspan="4"></td>
+					<td class="num discount">- {{ cart.get_discount|floatformat:"2" }} $</td>
+				</tr>
+			{% endif %}
 			<tr class="total">
 				<td>Total</td>
 				<td colspan="4"></td>
-				<td class="num">{{ cart.get_total_price }} $</td>
+				<td class="num">{{ cart.get_total_price_after_discount|floatformat:"2" }} $</td>
 			</tr>
 		</tbody>
 	</table>
+	<p>Use cupon</p>
+	<form action='{% url "cupons:apply" %}' method="post" class="add">
+		{% csrf_token %}
+		{{ cupon_apply_form }}
+		<input type="submit" value="Update">
+	</form>
 	<p class="text-right">
 		<a></a>
 		<a href='{% url "shop:ProductList" %}' class="btn btn-light">Shop more</a>

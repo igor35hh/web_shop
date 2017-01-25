@@ -3,6 +3,9 @@ from django.db import models
 # Create your models here.
 
 from shop.models import Profuct as Product
+from cupons.models import Cupon
+from decimal import Decimal
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Order(models.Model):
     first_name = models.CharField(verbose_name='Name', max_length=50)
@@ -14,6 +17,8 @@ class Order(models.Model):
     created = models.DateTimeField(verbose_name='Created', auto_now_add=True)
     updated = models.DateTimeField(verbose_name='Updated', auto_now=True)
     paid = models.BooleanField(verbose_name='Paid', default=False)
+    cupon = models.ForeignKey(Cupon, related_name='orders', null=True, blank=True)
+    discount = models.IntegerField(default=0, validators=[MinValueValidator(0),MaxValueValidator(100)])
 
     class Meta:
         ordering = ('-created',)
@@ -24,7 +29,9 @@ class Order(models.Model):
         return 'Order: {}'.format(self.id)
 
     def get_total_cost(self):
-        return sum(item.get_cost() for item in self.items.all())
+        total_cost = sum(item.get_cost() for item in self.items.all())
+        #return sum(item.get_cost() for item in self.items.all())
+        return total_cost - total_cost * (self.discount / Decimal('100'))
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items')

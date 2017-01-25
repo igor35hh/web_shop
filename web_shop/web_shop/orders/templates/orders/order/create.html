@@ -22,6 +22,13 @@
 					{{ item.product.name }} | Quantity: {{ item.quantity }} | Price: {{ item.total_price }}
 				</li>
 			{% endfor %}
+			{% if cart.cupon %}
+				<li>
+					"{{ cart.cupon.code }}" (on {{ cart.cupon.discount }}% less)
+					<span> - {{ cart.get_discount|floatformat:"2"}} $</span>
+				</li>
+			{% endif %}
 		</ul>
+		<p><strong>Total:</strong> {{ cart.get_total_price_after_discount|floatformat:"2" }} $</p>
 	</div>
 {% endblock %}
