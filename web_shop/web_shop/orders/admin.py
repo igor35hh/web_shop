@@ -10,6 +10,12 @@ from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 
+def OrderPDF(obj):
+    return format_html('<a href="{}">PDF</a>'.format(
+        reverse('orders:AdminOrderPDF', args=[obj.id])
+    ))
+OrderPDF.short_description = 'To pdf'
+
 def OrderDetail(obj):
     return format_html('<a href="{}">Overview</a>'.format(
         reverse('orders:AdminOrderDetail', args=[obj.id])
@@ -46,7 +52,7 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'first_name', 'last_name', 'email', 'address',
                     'postal_code', 'city', 'paid', 'created', 'updated',
-                    OrderDetail]
+                    OrderDetail, OrderPDF]
 
     list_filter = ['paid', 'created', 'updated']
 
