@@ -11,8 +11,16 @@
 </head>
 <body>
 	<section id="header">
-		<div class="top container">
-			The Online Shop
+		<div class="top container">	
+			<h1>The Online Shop
+			<a href='{% url "shop:ProductList" %}' class="btn btn-light">Home</a></h1>
+			{% if storage %}
+				<ul class="messages">
+					{% for message in storage %}
+						<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
 		</div>
 		<div class="top-bl">
 			<div class="top container">

@@ -13,6 +13,8 @@ from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from django.conf import settings
+from django.core.mail import send_mail, EmailMessage
+import smtplib
 
 @staff_member_required
 def AdminOrderDetail(request, order_id):
@@ -38,6 +40,20 @@ def OrderCreate(request):
     form = OrderCreateForm()
     return render(request, 'orders/order/create.html', {'cart':cart, 'form':form})
 
+def OrderEmail(order_id):
+    order = get_object_or_404(Order, id=order_id)
+    filename = settings.STATIC_ROOT+'order_{}.pdf'.format(order.id)
+    CreatePDF(filename, order_id)
+    
+    subject = 'Thanks for your order'
+    message = 'The identifier your order is: {}'.format(order.id)
+    to_list = [order.email]
+
+    mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, to_list)
+    mail.attach_file(filename)
+    mail.send()
+    #send_mail(subject, message, settings.EMAIL_HOST_USER, to_list, fail_silently=True)
+
 @staff_member_required
 def AdminOrderPDF(request, order_id):
     order = get_object_or_404(Order, id=order_id)
@@ -45,7 +61,14 @@ def AdminOrderPDF(request, order_id):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'filename={}'.format(filename)
 
-    c = canvas.Canvas(response, pagesize=letter)
+    CreatePDF(response, order_id)
+    
+    return response
+
+def CreatePDF(file_or_response, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    c = canvas.Canvas(file_or_response, pagesize=letter)
 
     c.setLineWidth(.3)
     c.setFont('Helvetica', 12)
@@ -85,4 +108,5 @@ def AdminOrderPDF(request, order_id):
     c.showPage()
     c.save()
     
-    return response
+    return file_or_response
+    

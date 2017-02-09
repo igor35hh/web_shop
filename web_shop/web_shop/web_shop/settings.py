@@ -120,4 +120,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 CART_SESSION_ID = 'cart'
 
+DELETE_MESSAGE = 5
+
+EMAIL_HOST = 'mail.svcorp.com.ua'
+EMAIL_HOST_USER = 'info1c@svcorp.com.ua'
+EMAIL_HOST_PASSWORD = '5UGV9dxiYKh4'
+EMAIL_PORT = 25
+
+
+
+
 
