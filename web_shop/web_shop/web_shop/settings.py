@@ -41,9 +41,13 @@ INSTALLED_APPS = (
 	'cart',
     'orders',
     'cupons',
+    'countstat',
+    'paypal.standard.ipn',
+    'payment',
 )
 
 MIDDLEWARE_CLASSES = (
+	'countstat.middleware.StatisticMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -126,6 +130,9 @@ EMAIL_HOST = 'mail.svcorp.com.ua'
 EMAIL_HOST_USER = 'info1c@svcorp.com.ua'
 EMAIL_HOST_PASSWORD = '5UGV9dxiYKh4'
 EMAIL_PORT = 25
+
+PAYPAL_RECEIVER_EMAIL = 'klimets@svcorp.com.ua'
+PAYPAL_TEST = True
 
 
 

@@ -43,7 +43,7 @@ def ExportToCSV(modeladmin, request, queryset):
         
     return response
 
-    ExportToCSV.short_description = 'Export to CSV'
+ExportToCSV.short_description = 'Export to CSV'
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem

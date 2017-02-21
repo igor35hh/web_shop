@@ -21,5 +21,8 @@ urlpatterns = [
     url(r'^cupons/', include('cupons.urls', namespace='cupons')),
     url(r'^cart/', include('cart.urls', namespace='cart')),
     url(r'^order/', include('orders.urls', namespace='orders')),
+    url(r'^payment/', include('payment.urls', namespace='payment')),
+    url(r'^paypal/', include('paypal.standard.ipn.urls')),
+    url(r'^admin/category/', include('countstat.urls', namespace='countstat')),
     url(r'^', include('shop.urls', namespace='shop'))
 ]

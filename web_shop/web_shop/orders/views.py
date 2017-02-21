@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 
@@ -15,6 +15,8 @@ from reportlab.lib.pagesizes import letter
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 import smtplib
+
+from django.core.urlresolvers import reverse
 
 @staff_member_required
 def AdminOrderDetail(request, order_id):
@@ -35,7 +37,10 @@ def OrderCreate(request):
                 OrderItem.objects.create(order=order, product=item['product'],
                                          price=item['price'], quantity=item['quantity'])
             cart.clear()
-            return render(request, 'orders/order/created.html', {'cart':cart, 'order':order})
+            #return render(request, 'orders/order/created.html', {'cart':cart, 'order':order})
+            OrderCreated.delay(order.id)
+            request.session['order_id'] = order.id
+            return redirect(reverse('payment:process'))
         
     form = OrderCreateForm()
     return render(request, 'orders/order/create.html', {'cart':cart, 'form':form})
